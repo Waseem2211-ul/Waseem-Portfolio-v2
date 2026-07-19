@@ -1,0 +1,84 @@
+.border-glow-card {
+  position: relative;
+  background-color: var(--card-bg, #120f17);
+  border-radius: var(--border-radius, 28px);
+  padding: 1px;
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Outer Glow using Conic Gradient centering around the cursor angle */
+.border-glow-card::before {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--glow-padding, 40px));
+  border-radius: calc(var(--border-radius, 28px) + var(--glow-padding, 40px));
+  background: conic-gradient(
+    from var(--cursor-angle, 110deg) at 50% 50%,
+    var(--glow-color, hsl(40 80% 80%)) 0deg,
+    var(--glow-color-60, hsl(40 80% 80% / 60%)) calc(var(--cone-spread, 25) * 0.2deg),
+    var(--glow-color-30, hsl(40 80% 80% / 30%)) calc(var(--cone-spread, 25) * 0.5deg),
+    transparent calc(var(--cone-spread, 25) * 1.5deg),
+    transparent 360deg
+  );
+  filter: blur(var(--glow-padding, 40px));
+  opacity: calc(var(--edge-proximity, 0) / 100 * var(--fill-opacity, 0.5));
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.border-glow-card.sweep-active::before {
+  transition: none;
+}
+
+/* Inner Container styling */
+.border-glow-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: calc(var(--border-radius, 28px) - 1px);
+  background-color: var(--card-bg, #120f17);
+  background-image: 
+    var(--gradient-one, transparent),
+    var(--gradient-two, transparent),
+    var(--gradient-three, transparent),
+    var(--gradient-four, transparent),
+    var(--gradient-five, transparent),
+    var(--gradient-six, transparent),
+    var(--gradient-seven, transparent),
+    var(--gradient-base, transparent);
+  background-blend-mode: screen;
+  overflow: hidden;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+}
+
+/* The actual border highlight */
+.edge-light {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--border-radius, 28px);
+  pointer-events: none;
+  z-index: 1;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--cursor-angle, 110deg) at 50% 50%,
+    var(--glow-color, hsl(40 80% 80%)) 0deg,
+    var(--glow-color-60, hsl(40 80% 80% / 60%)) calc(var(--cone-spread, 25) * 0.2deg),
+    var(--glow-color-30, hsl(40 80% 80% / 30%)) calc(var(--cone-spread, 25) * 0.5deg),
+    transparent calc(var(--cone-spread, 25) * 1deg),
+    transparent 360deg
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: calc(var(--edge-proximity, 0) / 100);
+  transition: opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.border-glow-card.sweep-active .edge-light {
+  transition: none;
+}
